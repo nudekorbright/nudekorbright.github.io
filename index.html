@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bright Nudekor — Marketing BI Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;0,900;1,300;1,700&family=DM+Mono:wght@300;400;500&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #06080f;
+  --bg2: #0b1120;
+  --surface: #101828;
+  --surface2: #1a2540;
+  --accent: #4DF0C5;
+  --accent2: #7B61FF;
+  --accent3: #FF6B6B;
+  --gold: #F5C842;
+  --text: #EEF2FF;
+  --muted: #6B7FA8;
+  --border: rgba(77,240,197,0.12);
+  --border2: rgba(255,255,255,0.06);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  mix-blend-mode: difference;
+}
+.cursor-follower {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), width 0.3s, height 0.3s;
+  opacity: 0.5;
+}
+a:hover ~ .cursor, button:hover ~ .cursor { width: 20px; height: 20px; }
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* GRID BACKGROUND */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(77,240,197,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77,240,197,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 24px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  background: rgba(6,8,15,0.7);
+  border-bottom: 1px solid var(--border2);
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.nav-logo span {
+  color: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  padding: 10px 24px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 60px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(77,240,197,0.08) 0%, transparent 70%);
+  top: -100px; right: -100px;
+  animation: pulse-glow 6s ease-in-out infinite;
+}
+
+.hero-glow2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(123,97,255,0.06) 0%, transparent 70%);
+  bottom: 0; left: 200px;
+  animation: pulse-glow 8s ease-in-out infinite reverse;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+.hero-content {
+  max-width: 900px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeUp 0.8s ease 0.1s both;
+}
+
+.hero-tag::before {
+  content: '';
+  display: block;
+  width: 40px; height: 1px;
+  background: var(--accent);
+}
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -3px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero h1 .line2 {
+  display: block;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  animation: fadeUp 0.8s ease 0.3s both;
+}
+
+.hero-sub strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.8s ease 0.4s both;
+}
+
+.btn-primary {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 16px 36px;
+  border-radius: 2px;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(77,240,197,0.3);
+}
+
+.btn-secondary {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  text-decoration: none;
+  padding: 16px 36px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 80px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border2);
+  animation: fadeUp 0.8s ease 0.5s both;
+  flex-wrap: wrap;
+}
+
+.stat-item {}
+
+.stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* SECTIONS */
+section {
+  padding: 120px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-tag::before {
+  content: '//';
+  opacity: 0.4;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.section-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 64px;
+}
+
+/* ABOUT */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.about-text p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.about-text p strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.about-text p em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.journey-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border2);
+  position: relative;
+}
+
+.timeline-item:last-child {
+  border-bottom: none;
+}
+
+.timeline-year {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  padding-top: 3px;
+}
+
+.timeline-content h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.timeline-content p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* SKILLS */
+.skills-bg {
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2px;
+}
+
+.skill-card {
+  background: var(--surface);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+
+.skill-card:hover {
+  background: var(--surface2);
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+
+.skill-card:hover::before { transform: scaleX(1); }
+
+.skill-card.sql::before { background: var(--accent); }
+.skill-card.powerbi::before { background: var(--accent2); }
+.skill-card.excel::before { background: var(--gold); }
+.skill-card.analytics::before { background: var(--accent3); }
+
+.skill-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.skill-name {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.skill-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+
+.sql .skill-tag { background: rgba(77,240,197,0.1); color: var(--accent); }
+.powerbi .skill-tag { background: rgba(123,97,255,0.1); color: #A08BFF; }
+.excel .skill-tag { background: rgba(245,200,66,0.1); color: var(--gold); }
+.analytics .skill-tag { background: rgba(255,107,107,0.1); color: var(--accent3); }
+
+/* PROJECTS */
+.projects-grid {
+  display: grid;
+  gap: 2px;
+}
+
+.project-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--surface);
+  overflow: hidden;
+  transition: background 0.3s;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.project-card:hover {
+  background: var(--surface2);
+  border-color: var(--border);
+}
+
+.project-card.featured {
+  grid-template-columns: 1fr;
+}
+
+.project-visual {
+  background: var(--bg2);
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+}
+
+.project-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(77,240,197,0.05) 0%,
+    rgba(123,97,255,0.05) 100%);
+}
+
+.mock-dashboard {
+  width: 100%;
+  max-width: 360px;
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--border2);
+  position: relative;
+  z-index: 1;
+}
+
+.mock-header {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.mock-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.mock-kpi {
+  background: var(--bg2);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.mock-kpi-val {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -1px;
+}
+
+.mock-kpi-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.mock-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mock-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mock-bar-label {
+  font-size: 9px;
+  color: var(--muted);
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.mock-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mock-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.project-info {
+  padding: 48px;
+}
+
+.project-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.project-title {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.project-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.project-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.project-metrics {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.project-metric {
+  text-align: center;
+}
+
+.project-metric-val {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -1px;
+  display: block;
+}
+
+.project-metric-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.project-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.project-tool {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 4px 12px;
+  background: rgba(77,240,197,0.08);
+  border: 1px solid rgba(77,240,197,0.2);
+  color: var(--accent);
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+
+.project-links {
+  display: flex;
+  gap: 16px;
+}
+
+.project-link {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+
+.project-link:hover { color: var(--accent); }
+
+.project-link-arrow {
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+.project-link:hover .project-link-arrow {
+  transform: translateX(4px);
+}
+
+/* SERVICES */
+.services-bg {
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.service-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.service-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.service-price-badge {
+  position: absolute;
+  top: 20px; right: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(77,240,197,0.1);
+  padding: 4px 10px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+
+.service-icon {
+  font-size: 36px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.service-name {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.service-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.service-includes {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.service-includes li {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.service-includes li::before {
+  content: '→';
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* BOOKS */
+.books-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.book-card {
+  flex-shrink: 0;
+  width: 160px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.book-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.book-emoji { font-size: 32px; margin-bottom: 12px; display: block; }
+
+.book-title {
+  font-family: 'Fraunces', serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.book-author {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+/* CONTACT */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contact-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.contact-item:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.contact-icon { font-size: 20px; flex-shrink: 0; }
+
+.contact-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.contact-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.availability-card {
+  background: linear-gradient(135deg,
+    rgba(77,240,197,0.08),
+    rgba(123,97,255,0.08));
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 40px;
+}
+
+.availability-dot {
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  box-shadow: 0 0 16px var(--accent);
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.availability-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.availability-sub {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.availability-types {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.avail-type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 2px;
+  font-size: 13px;
+}
+
+.avail-type-label { color: var(--text); font-weight: 600; }
+.avail-type-price {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* FOOTER */
+footer {
+  padding: 48px 60px;
+  border-top: 1px solid var(--border2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-name {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.footer-name span { color: var(--accent); }
+
+.footer-links {
+  display: flex;
+  gap: 32px;
+}
+
+.footer-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--accent); }
+
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--border),
+    transparent);
+  margin: 0 60px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* MARQUEE */
+.marquee-wrap {
+  background: var(--accent);
+  padding: 14px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-track {
+  display: flex;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+
+.marquee-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--bg);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.marquee-item::after {
+  content: '✦';
+  font-size: 8px;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  nav { padding: 20px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  section { padding: 80px 24px; }
+  footer { padding: 32px 24px; }
+  .divider { margin: 0 24px; }
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  .project-card { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Bright<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Marketing BI Data Analyst</div>
+    <h1>
+      Turning raw data<br>
+      into decisions that<br>
+      <em>drive revenue.</em>
+      <span class="line2">Bright Nudekor.</span>
+    </h1>
+    <p class="hero-sub">
+      I help <strong>ecommerce businesses</strong> and
+      <strong>marketing teams</strong> understand their data —
+      building SQL-powered dashboards and Power BI reports
+      that answer the questions that matter most.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-secondary">Let's Work Together →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">8</div>
+        <div class="stat-label">SQL Tables Mastered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">12</div>
+        <div class="stat-label">Task Milestones</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">20+</div>
+        <div class="stat-label">Business Metrics</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">7</div>
+        <div class="stat-label">Analytics Books Read</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">SQL Querying</div>
+    <div class="marquee-item">Power BI Dashboards</div>
+    <div class="marquee-item">Marketing Analytics</div>
+    <div class="marquee-item">ROAS Analysis</div>
+    <div class="marquee-item">Customer Segmentation</div>
+    <div class="marquee-item">KPI Reporting</div>
+    <div class="marquee-item">Data Storytelling</div>
+    <div class="marquee-item">Campaign Performance</div>
+    <div class="marquee-item">SQL Querying</div>
+    <div class="marquee-item">Power BI Dashboards</div>
+    <div class="marquee-item">Marketing Analytics</div>
+    <div class="marquee-item">ROAS Analysis</div>
+    <div class="marquee-item">Customer Segmentation</div>
+    <div class="marquee-item">KPI Reporting</div>
+    <div class="marquee-item">Data Storytelling</div>
+    <div class="marquee-item">Campaign Performance</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-tag">About Me</div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <h2 class="section-title" style="margin-bottom:32px;">The analyst who speaks<br><em>business fluently.</em></h2>
+      <p>
+        I am <strong>Bright Nudekor</strong>, a Marketing BI Data Analyst based in
+        <em>Cairo, Egypt</em> — on a mission to help businesses stop guessing
+        and start making decisions backed by real data.
+      </p>
+      <p>
+        My journey started with <strong>Excel</strong>, expanded into
+        <strong>SQL</strong> and <strong>Power BI</strong>, and is backed by a
+        deep commitment to understanding not just the tools but the business
+        questions behind every dataset.
+      </p>
+      <p>
+        I do not just deliver charts and tables. Every analysis I produce
+        comes with <em>clear insights</em> and <em>specific recommendations</em>
+        — because data only has value when it drives action.
+      </p>
+      <p>
+        My specialty is <strong>marketing analytics</strong> — helping ecommerce
+        businesses and marketing teams understand which campaigns are making
+        money, who their best customers are, and where their next
+        growth opportunity is hiding.
+      </p>
+      <div style="margin-top:32px;padding:24px;background:var(--surface);border:1px solid var(--border2);border-radius:4px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Currently Reading</div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:4px;">SQL for Data Analysis — Cathy Tanimura</div>
+        <div style="font-size:13px;color:var(--muted);">Advanced Techniques for Transforming Data into Insights</div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:0.2s;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;">Learning Journey</div>
+      <div class="journey-timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">2024</div>
+          <div class="timeline-content">
+            <h4>Started the Data Journey</h4>
+            <p>Began learning Excel data analysis and understanding business metrics, KPIs and OKRs.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2025</div>
+          <div class="timeline-content">
+            <h4>SQL Foundations Complete</h4>
+            <p>Mastered SELECT, WHERE, JOINs, GROUP BY, HAVING, CASE statements and Date functions on real marketing datasets.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2025</div>
+          <div class="timeline-content">
+            <h4>Advanced SQL — Window Functions</h4>
+            <p>Learned RANK, LAG, LEAD, running totals, rolling averages and CTEs for complex business analysis.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2026</div>
+          <div class="timeline-content">
+            <h4>Power BI + Full BI Stack</h4>
+            <p>Building interactive dashboards, DAX measures and complete BI solutions for marketing clients.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">Now</div>
+          <div class="timeline-content">
+            <h4>Open for Clients 🔥</h4>
+            <p>Available for freelance projects, retainer work and full-time analyst roles globally.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="skills-bg">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-tag reveal">Technical Skills</div>
+    <h2 class="section-title reveal">The tools that<br><em>power the insights.</em></h2>
+    <p class="section-sub reveal">A focused stack built for one purpose — turning raw business data into clear decisions.</p>
+    <div class="skills-grid reveal">
+      <div class="skill-card sql">
+        <span class="skill-icon">🗄️</span>
+        <div class="skill-name">SQL</div>
+        <div class="skill-desc">Writing complex queries to extract, clean and transform data from relational databases. From basic SELECT statements to advanced window functions and CTEs.</div>
+        <div class="skill-tags">
+          <span class="skill-tag">SELECT & JOINs</span>
+          <span class="skill-tag">GROUP BY</span>
+          <span class="skill-tag">Window Functions</span>
+          <span class="skill-tag">CTEs</span>
+          <span class="skill-tag">Subqueries</span>
+          <span class="skill-tag">MySQL</span>
+        </div>
+      </div>
+      <div class="skill-card powerbi">
+        <span class="skill-icon">📊</span>
+        <div class="skill-name">Power BI</div>
+        <div class="skill-desc">Building interactive dashboards and KPI reports that make data immediately understandable to any business audience — no technical knowledge required.</div>
+        <div class="skill-tags">
+          <span class="skill-tag">DAX Measures</span>
+          <span class="skill-tag">Data Modeling</span>
+          <span class="skill-tag">KPI Cards</span>
+          <span class="skill-tag">Slicers</span>
+          <span class="skill-tag">Power Query</span>
+        </div>
+      </div>
+      <div class="skill-card excel">
+        <span class="skill-icon">📗</span>
+        <div class="skill-name">Excel</div>
+        <div class="skill-desc">Advanced Excel for business reporting, pivot tables, financial modeling and data preparation. The foundation that connects to Power BI and SQL seamlessly.</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Pivot Tables</span>
+          <span class="skill-tag">Power Query</span>
+          <span class="skill-tag">VLOOKUP</span>
+          <span class="skill-tag">Charts</span>
+          <span class="skill-tag">Data Validation</span>
+        </div>
+      </div>
+      <div class="skill-card analytics">
+        <span class="skill-icon">🎯</span>
+        <div class="skill-name">Marketing Analytics</div>
+        <div class="skill-desc">Deep knowledge of marketing metrics and KPIs — ROAS, CAC, AOV, LTV, CVR — and the business thinking to translate them into actionable growth recommendations.</div>
+        <div class="skill-tags">
+          <span class="skill-tag">ROAS</span>
+          <span class="skill-tag">CAC & LTV</span>
+          <span class="skill-tag">CVR</span>
+          <span class="skill-tag">AOV</span>
+          <span class="skill-tag">MoM/YoY</span>
+          <span class="skill-tag">OKRs & KPIs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-tag reveal">Portfolio Projects</div>
+  <h2 class="section-title reveal">Real data.<br><em>Real insights.</em></h2>
+  <p class="section-sub reveal">Every project built on real business scenarios with genuine datasets — not toy examples.</p>
+
+  <!-- PROJECT 1 -->
+  <div class="project-card reveal">
+    <div class="project-visual">
+      <div class="mock-dashboard">
+        <div class="mock-header">Marketing Analytics Overview — 2023/2024</div>
+        <div class="mock-kpis">
+          <div class="mock-kpi">
+            <div class="mock-kpi-val" style="color:#4DF0C5;">$42.8K</div>
+            <div class="mock-kpi-label">Total Revenue</div>
+          </div>
+          <div class="mock-kpi">
+            <div class="mock-kpi-val" style="color:#7B61FF;">3.2x</div>
+            <div class="mock-kpi-label">Avg ROAS</div>
+          </div>
+          <div class="mock-kpi">
+            <div class="mock-kpi-val" style="color:#F5C842;">$535</div>
+            <div class="mock-kpi-label">AOV</div>
+          </div>
+          <div class="mock-kpi">
+            <div class="mock-kpi-val" style="color:#FF6B6B;">66%</div>
+            <div class="mock-kpi-label">Margin</div>
+          </div>
+        </div>
+        <div class="mock-bars">
+          <div class="mock-bar-row">
+            <div class="mock-bar-label">Nigeria</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:100%;background:linear-gradient(90deg,#4DF0C5,#0096c7);"></div></div>
+          </div>
+          <div class="mock-bar-row">
+            <div class="mock-bar-label">USA</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:78%;background:linear-gradient(90deg,#7B61FF,#5b21b6);"></div></div>
+          </div>
+          <div class="mock-bar-row">
+            <div class="mock-bar-label">UK</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:55%;background:linear-gradient(90deg,#F5C842,#d97706);"></div></div>
+          </div>
+          <div class="mock-bar-row">
+            <div class="mock-bar-label">Egypt</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:30%;background:linear-gradient(90deg,#FF6B6B,#dc2626);"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="project-info">
+      <div class="project-num">01 — Featured Project</div>
+      <h3 class="project-title">Product Analytics<br><em>Overview Dashboard</em></h3>
+      <p class="project-desc">
+        A complete end-to-end business intelligence solution answering a management brief requesting revenue by country, YoY profit analysis, discount band breakdown and detailed regional performance — with additional analyst-driven strategic recommendations.
+      </p>
+      <div class="project-metrics">
+        <div class="project-metric">
+          <span class="project-metric-val">8</span>
+          <span class="project-metric-label">Tables Joined</span>
+        </div>
+        <div class="project-metric">
+          <span class="project-metric-val">50</span>
+          <span class="project-metric-label">Customers</span>
+        </div>
+        <div class="project-metric">
+          <span class="project-metric-val">10</span>
+          <span class="project-metric-label">Campaigns</span>
+        </div>
+        <div class="project-metric">
+          <span class="project-metric-val">20+</span>
+          <span class="project-metric-label">SQL Queries</span>
+        </div>
+      </div>
+      <div class="project-tools">
+        <span class="project-tool">MySQL</span>
+        <span class="project-tool">SQL Window Functions</span>
+        <span class="project-tool">CTEs</span>
+        <span class="project-tool">Power BI</span>
+        <span class="project-tool">DAX</span>
+        <span class="project-tool">Data Modeling</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/nudekorbright" class="project-link">
+          View on GitHub <span class="project-link-arrow">→</span>
+        </a>
+        <a href="#" class="project-link" style="color:var(--muted);">
+          View Dashboard <span class="project-link-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT 2 -->
+  <div class="project-card reveal">
+    <div class="project-visual" style="background:linear-gradient(135deg,rgba(123,97,255,0.08),rgba(77,240,197,0.04));">
+      <div class="mock-dashboard" style="max-width:320px;">
+        <div class="mock-header">Campaign Performance — ROAS Tracker</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(77,240,197,0.1);border-radius:3px;">
+            <span style="font-size:10px;color:var(--text);">Black Friday</span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#4DF0C5;">4.8x ✅</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(77,240,197,0.08);border-radius:3px;">
+            <span style="font-size:10px;color:var(--text);">Q1 Launch</span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#4DF0C5;">3.9x ✅</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(245,200,66,0.08);border-radius:3px;">
+            <span style="font-size:10px;color:var(--text);">Mid Year Sale</span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#F5C842;">2.0x ⚠️</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:rgba(255,107,107,0.08);border-radius:3px;">
+            <span style="font-size:10px;color:var(--text);">Easter Promo</span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:#FF6B6B;">0.9x ❌</span>
+          </div>
+        </div>
+        <div style="padding:10px;background:rgba(255,107,107,0.06);border-radius:3px;font-size:9px;color:#FF6B6B;font-family:'DM Mono',monospace;">⚠ Easter Promo losing $0.10 per $1 spent — recommend pause</div>
+      </div>
+    </div>
+    <div class="project-info">
+      <div class="project-num">02 — Marketing Analytics</div>
+      <h3 class="project-title">Campaign ROAS<br><em>Performance Analysis</em></h3>
+      <p class="project-desc">
+        A deep dive into marketing campaign profitability — calculating ROAS, CAC, CVR and AOV across 10 campaigns on 3 channels (Email, Google Ads, Social Media) with traffic light health indicators and actionable budget recommendations.
+      </p>
+      <div class="project-metrics">
+        <div class="project-metric">
+          <span class="project-metric-val">10</span>
+          <span class="project-metric-label">Campaigns Analyzed</span>
+        </div>
+        <div class="project-metric">
+          <span class="project-metric-val">3</span>
+          <span class="project-metric-label">Channels</span>
+        </div>
+        <div class="project-metric">
+          <span class="project-metric-val">4.8x</span>
+          <span class="project-metric-label">Best ROAS</span>
+        </div>
+      </div>
+      <div class="project-tools">
+        <span class="project-tool">SQL</span>
+        <span class="project-tool">ROAS Analysis</span>
+        <span class="project-tool">CAC Calculation</span>
+        <span class="project-tool">Window Functions</span>
+        <span class="project-tool">Power BI</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/nudekorbright" class="project-link">
+          View on GitHub <span class="project-link-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT 3 -->
+  <div class="project-card reveal">
+    <div class="project-visual" style="background:linear-gradient(135deg,rgba(245,200,66,0.06),rgba(255,107,107,0.04));">
+      <div class="mock-dashboard" style="max-width:320px;">
+        <div class="mock-header">Customer Health Dashboard</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="text-align:center;padding:12px;background:rgba(77,240,197,0.08);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:#4DF0C5;">28</div>
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;">VIP</div>
+          </div>
+          <div style="text-align:center;padding:12px;background:rgba(245,200,66,0.08);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:#F5C842;">15</div>
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;">At Risk</div>
+          </div>
+          <div style="text-align:center;padding:12px;background:rgba(123,97,255,0.08);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:#A08BFF;">12</div>
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;">Loyal</div>
+          </div>
+          <div style="text-align:center;padding:12px;background:rgba(255,107,107,0.08);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:#FF6B6B;">5</div>
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:1px;">Churned</div>
+          </div>
+        </div>
+        <div class="mock-bars">
+          <div class="mock-bar-row">
+            <div class="mock-bar-label" style="font-size:8px;">$0–100</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:30%;background:#4DF0C5;"></div></div>
+          </div>
+          <div class="mock-bar-row">
+            <div class="mock-bar-label" style="font-size:8px;">$100–500</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:60%;background:#7B61FF;"></div></div>
+          </div>
+          <div class="mock-bar-row">
+            <div class="mock-bar-label" style="font-size:8px;">$500–1K</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:45%;background:#F5C842;"></div></div>
+          </div>
+          <div class="mock-bar-row">
+            <div class="mock-bar-label" style="font-size:8px;">$1K+</div>
+            <div class="mock-bar-track"><div class="mock-bar-fill" style="width:20%;background:#FF6B6B;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="project-info">
+      <div class="project-num">03 — Customer Analytics</div>
+      <h3 class="project-title">Customer Segmentation<br><em>and Health Analysis</em></h3>
+      <p class="project-desc">
+        Complete customer lifecycle analysis segmenting 50 customers by lifetime value, purchase behavior and activity status. Identifies VIP customers to protect, at-risk accounts to re-engage and churned customers for win-back campaigns.
+      </p>
+      <div class="project-metrics">
+        <div class="project-metric">
+          <span class="project-metric-val">50</span>
+          <span class="project-metric-label">Customers</span>
+        </div>
+        <div class="project-metric">
+          <span class="project-metric-val">4</span>
+          <span class="project-metric-label">Segments</span>
+        </div>
+        <div class="project-metric">
+          <span class="project-metric-val">8</span>
+          <span class="project-metric-label">Countries</span>
+        </div>
+      </div>
+      <div class="project-tools">
+        <span class="project-tool">SQL CASE WHEN</span>
+        <span class="project-tool">CTEs</span>
+        <span class="project-tool">DATEDIFF</span>
+        <span class="project-tool">LTV Analysis</span>
+        <span class="project-tool">Power BI</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/nudekorbright" class="project-link">
+          View on GitHub <span class="project-link-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services-bg">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-tag reveal">Services</div>
+    <h2 class="section-title reveal">What I can<br><em>do for you.</em></h2>
+    <p class="section-sub reveal">Focused services built around one goal — making your data work harder for your business.</p>
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-price-badge">From $150</div>
+        <span class="service-icon">📊</span>
+        <div class="service-name">Marketing Campaign Analysis</div>
+        <div class="service-desc">Find out exactly which campaigns are making money and which are wasting your budget — with ROAS, CAC, CVR and actionable recommendations.</div>
+        <ul class="service-includes">
+          <li>ROAS calculation per campaign</li>
+          <li>CAC and CVR analysis</li>
+          <li>Channel performance comparison</li>
+          <li>Written insights report</li>
+          <li>Budget reallocation recommendations</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-price-badge">From $200</div>
+        <span class="service-icon">🖥️</span>
+        <div class="service-name">Power BI Dashboard</div>
+        <div class="service-desc">A professional interactive dashboard your whole team can use — built from your CSV, Excel or database data with slicers, KPI cards and real insights.</div>
+        <ul class="service-includes">
+          <li>Multi-page interactive dashboard</li>
+          <li>KPI cards and trend charts</li>
+          <li>Slicers for date and category</li>
+          <li>Conditional color formatting</li>
+          <li>PDF export ready</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-price-badge">From $150</div>
+        <span class="service-icon">👥</span>
+        <div class="service-name">Customer Segmentation</div>
+        <div class="service-desc">Understand exactly who your customers are — segmented by value, behavior and activity so your marketing team knows exactly who to target next.</div>
+        <ul class="service-includes">
+          <li>LTV-based segmentation</li>
+          <li>VIP and at-risk identification</li>
+          <li>Churn analysis</li>
+          <li>Campaign targeting recommendations</li>
+          <li>Customer health dashboard</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-price-badge">From $400/mo</div>
+        <span class="service-icon">📅</span>
+        <div class="service-name">Monthly BI Retainer</div>
+        <div class="service-desc">Your on-call data analyst — monthly reports, updated dashboards and data questions answered whenever you need them. No full-time hire required.</div>
+        <ul class="service-includes">
+          <li>Monthly performance report</li>
+          <li>Dashboard updates and new metrics</li>
+          <li>MoM and YoY comparisons</li>
+          <li>Unlimited data questions</li>
+          <li>Priority response time</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-price-badge">From $100</div>
+        <span class="service-icon">🧹</span>
+        <div class="service-name">Data Cleaning and Prep</div>
+        <div class="service-desc">Turn your messy, inconsistent spreadsheet into a clean, analysis-ready dataset — formatted, standardized and ready for Power BI or any reporting tool.</div>
+        <ul class="service-includes">
+          <li>Duplicate removal</li>
+          <li>NULL handling and standardization</li>
+          <li>Data type corrections</li>
+          <li>Column restructuring</li>
+          <li>Delivery in Excel or CSV</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-price-badge">From $29</div>
+        <span class="service-icon">📦</span>
+        <div class="service-name">Power BI Templates</div>
+        <div class="service-desc">Pre-built professional dashboards you plug your own data into. Marketing, Sales, Finance and Ecommerce templates available — instant results, zero setup time.</div>
+        <ul class="service-includes">
+          <li>Ready-made .pbit template file</li>
+          <li>All DAX measures included</li>
+          <li>Setup instructions included</li>
+          <li>Works with Excel or CSV</li>
+          <li>Lifetime access and updates</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKS / LEARNING -->
+<section>
+  <div class="section-tag reveal">Continuous Learning</div>
+  <h2 class="section-title reveal">Knowledge that<br><em>backs the work.</em></h2>
+  <p class="section-sub reveal">Every analysis is grounded in deep understanding of business thinking, not just technical skills.</p>
+  <div class="books-scroll reveal">
+    <div class="book-card">
+      <span class="book-emoji">📊</span>
+      <div class="book-title">SQL for Data Analysis</div>
+      <div class="book-author">Cathy Tanimura</div>
+    </div>
+    <div class="book-card">
+      <span class="book-emoji">🎯</span>
+      <div class="book-title">Measure What Matters</div>
+      <div class="book-author">John Doerr</div>
+    </div>
+    <div class="book-card">
+      <span class="book-emoji">📈</span>
+      <div class="book-title">Storytelling with Data</div>
+      <div class="book-author">Cole Knaflic</div>
+    </div>
+    <div class="book-card">
+      <span class="book-emoji">📐</span>
+      <div class="book-title">KPIs for Dummies</div>
+      <div class="book-author">Bernard Marr</div>
+    </div>
+    <div class="book-card">
+      <span class="book-emoji">🚀</span>
+      <div class="book-title">Lean Analytics</div>
+      <div class="book-author">Croll & Yoskovitz</div>
+    </div>
+    <div class="book-card">
+      <span class="book-emoji">📉</span>
+      <div class="book-title">Art of Statistics</div>
+      <div class="book-author">David Spiegelhalter</div>
+    </div>
+    <div class="book-card">
+      <span class="book-emoji">🔬</span>
+      <div class="book-title">Statistics for Data Science</div>
+      <div class="book-author">James D. Miller</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag reveal">Get in Touch</div>
+  <h2 class="section-title reveal">Ready to make your<br><em>data work harder?</em></h2>
+  <p class="section-sub reveal">Whether you have a project in mind or just want to explore how data analysis can help your business grow — let's talk.</p>
+  <div class="contact-grid reveal">
+    <div class="contact-info">
+      <a href="mailto:datawithbright@gmail.com" class="contact-item">
+        <span class="contact-icon">📧</span>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">datawithbright@gmail.com</div>
+        </div>
+      </a>
+      <a href="https://linkedin.com/in/nudekorbright" class="contact-item" target="_blank">
+        <span class="contact-icon">💼</span>
+        <div>
+          <div class="contact-label">LinkedIn</div>
+          <div class="contact-value">linkedin.com/in/nudekorbright</div>
+        </div>
+      </a>
+      <a href="https://github.com/nudekorbright" class="contact-item" target="_blank">
+        <span class="contact-icon">🐙</span>
+        <div>
+          <div class="contact-label">GitHub</div>
+          <div class="contact-value">github.com/nudekorbright</div>
+        </div>
+      </a>
+      <a href="https://fiverr.com/nudekorbright" class="contact-item" target="_blank">
+        <span class="contact-icon">🎯</span>
+        <div>
+          <div class="contact-label">Fiverr</div>
+          <div class="contact-value">fiverr.com/nudekorbright</div>
+        </div>
+      </a>
+      <div class="contact-item" style="cursor:default;">
+        <span class="contact-icon">📍</span>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">Cairo, Egypt — Available Worldwide</div>
+        </div>
+      </div>
+    </div>
+    <div class="availability-card reveal" style="transition-delay:0.2s;">
+      <div>
+        <span class="availability-dot"></span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;">Available for Work</span>
+      </div>
+      <h3 class="availability-title">Let's build something with your data.</h3>
+      <p class="availability-sub">I am currently open to freelance projects, retainer agreements and entry-level analyst roles. Response time is typically within a few hours.</p>
+      <div class="availability-types">
+        <div class="avail-type">
+          <span class="avail-type-label">One-time Project</span>
+          <span class="avail-type-price">From $100</span>
+        </div>
+        <div class="avail-type">
+          <span class="avail-type-label">Monthly Retainer</span>
+          <span class="avail-type-price">From $400/mo</span>
+        </div>
+        <div class="avail-type">
+          <span class="avail-type-label">Power BI Templates</span>
+          <span class="avail-type-price">From $29</span>
+        </div>
+        <div class="avail-type">
+          <span class="avail-type-label">Full-time Role</span>
+          <span class="avail-type-price">Open to discuss</span>
+        </div>
+      </div>
+      <a href="mailto:nudekorbright@gmail.com" class="btn-primary" style="display:inline-block;text-align:center;width:100%;">
+        Send Me a Message →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Bright <span>Nudekor</span></div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#services">Services</a>
+    <a href="https://github.com/nudekorbright">GitHub</a>
+    <a href="https://linkedin.com/in/nudekorbright">LinkedIn</a>
+  </div>
+  <div class="footer-copy">© 2026 — Marketing BI Data Analyst</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursor-follower');
+let mouseX = 0, mouseY = 0;
+let followerX = 0, followerY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top = mouseY + 'px';
+});
+
+function animateFollower() {
+  followerX += (mouseX - followerX) * 0.12;
+  followerY += (mouseY - followerY) * 0.12;
+  follower.style.left = followerX + 'px';
+  follower.style.top = followerY + 'px';
+  requestAnimationFrame(animateFollower);
+}
+animateFollower();
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+reveals.forEach(el => observer.observe(el));
+
+// SMOOTH NAV
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// NAV ACTIVE STATE
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 50) {
+    nav.style.background = 'rgba(6,8,15,0.95)';
+  } else {
+    nav.style.background = 'rgba(6,8,15,0.7)';
+  }
+});
+</script>
+
+</body>
+</html>
